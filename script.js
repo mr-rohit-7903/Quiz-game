@@ -1,14 +1,18 @@
+// adding api Url
 const apiUrl = "https://opentdb.com/api.php?amount=5&category=9&difficulty=medium&type=multiple";
+
+// global variables used
 let i = 0;
 var options =[];
 var liElements = [];
 var score = 0;
 
+// calling HTML 
 const questions = document.querySelector(".question h3");
 const next = document.querySelector("#next");
 const ul = document.querySelector("#options");
 
-
+//function to fetch API
 async function fetchQuestions() {
     try {
         // Fetch data from the API
@@ -25,9 +29,13 @@ async function fetchQuestions() {
             console.error("Error fetching trivia questions:", data);
         }
 
-        //function to display questions and answers
+        //Function to display questions and answers
         function displayQuestions(){
-            questions.innerHTML =  data.results[i].question;
+
+            //Displaying question along with index
+            questions.innerHTML = i+1 + ". " + data.results[i].question;
+
+            //Creating 4 options
             let li1 = document.createElement("li");
             let li2 = document.createElement("li");
             let li3 = document.createElement("li");
@@ -35,46 +43,61 @@ async function fetchQuestions() {
 
             liElements = [li1, li2, li3, li4];
 
+            //Adding incorrect and correct answers to options array
             data.results[i].incorrect_answers.forEach(el => {
                 options.push(el);
             });
-
             options.push(data.results[i].correct_answer);
+
+            //Shuffling the options array
             const shuffledOptions = shuffleArray(options);
             console.log(shuffledOptions);
 
+            //adding options to HTML
             shuffledOptions.forEach((el, index)=>{
                 liElements[index].innerHTML = el;
+                liElements[index].classList.toggle("hover");
             });
-
             liElements.forEach(li => ul.appendChild(li)); 
+
+            //Checking answers
             checkAnswers();
         }
 
+        //Function to check answers
         function checkAnswers(){
             liElements.forEach((el) =>{
+
+                //checking the click event
                 el.addEventListener('click', ()=>{
 
                     if (el.classList.contains("clicked")) {
                         return; // Exit if already clicked
                     }
         
-                    // Mark the element as clicked
-                    liElements.forEach((el) =>{el.classList.add("clicked")});
+                    // Mark the element as clicked to lock clicking again
+                    liElements.forEach((el) =>{
+                        el.classList.add("clicked");
+                        el.classList.toggle("hover");
+                    });
 
-                    if(el.innerHTML == data.results[i].correct_answer){
+                    //for correct option selected by user
+                    if(el.innerHTML == data.results[i].correct_answer){ 
                         el.classList.add("correct");
                         score = score + 1;
                     }
+                    //for wrong option selected by user
                     else{
                         el.classList.add("incorrect");
                     }
-                    click = true;
+
+                    //Show the answer, even if user selected wrong answer
                     showAnswer();
                 })
             });
         }
 
+        //Function to highlight the correct option
         function showAnswer(){
             liElements.forEach((el) =>{
                 if(el.innerHTML == data.results[i].correct_answer){
@@ -85,20 +108,29 @@ async function fetchQuestions() {
 
         //adding next button
         next.addEventListener('click',()=>{
-            next.innerHTML = "next";
+            next.innerHTML = "Next";
+
+            //removing all the added options
             while (ul.firstChild) {
                 ul.removeChild(ul.firstChild);
             }
+
+            //clearing arrays
             liElements = [];
             options =[];
-            if(i<4) {
-                i++;
+
+            //increasing index
+            i++;
+
+            // checking the number of questions 
+            if(i<5) {
                 displayQuestions();
             }
             else{
-                questions.innerHTML = `You have completed the Quiz with score: ${score}`;
+                //complition of quiz
+                questions.innerHTML = `You have completed the Quiz with score: ${score} out of 5.`;
                 next.innerHTML = "Play Again";
-                i = 0;
+                i = -1;
             }
         });
 
@@ -116,6 +148,5 @@ function shuffleArray(array) {
     return array;
 }
 
-
-
+//Function to fetch data from API
 fetchQuestions();

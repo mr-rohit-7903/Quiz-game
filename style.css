@@ -13,10 +13,10 @@
     justify-content: center;
 }
 
+/* Quiz box  */
 .box{
-    max-width: 600px;
+    max-width: 50rem;
     width: 90%;
-    min-width: 530px;
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -25,11 +25,14 @@
     padding: 20px 40px 40px 40px;
 }
 
+/* Quiz Game  */
 h2{
     padding: 20px 40px 20px 0px;
     color:#031F4E;
 
 }
+
+/* Question  */
 .question{
     color: #031F4E;
     padding: 20px 20px 20px 10px;
@@ -43,6 +46,7 @@ ul{
     justify-content: space-between;
 }
 
+/* Options  */
 ul li{
     list-style: none;
     padding: 10px;
@@ -53,22 +57,34 @@ ul li{
     border-radius: 5px;
 }
 
-ul li:hover{
+.hover:hover{
     background-color: #031F4E;
     color: white;
-    transition: all 0.2ms;
+    transition: all 0.2s;
+}
+@media (max-width: 768px) {
+    ul li:hover {
+        background-color: inherit; 
+        color: inherit;            
+        transition: none;          
+    }
 }
 
+/* used in js  */
 .correct{
     background: rgb(64, 206, 64);
 }
 .incorrect{
     background: rgb(177, 28, 28);
+    color:#fff;
 }
+/* used in js */
 
+/* next button  */
 button{
+    min-width: 20%;
     padding: 10px;
-    margin: 10px 150px;
+    margin: 0 40%;
     border: none;
     border-radius: 5px;
     background: #031F4E;
